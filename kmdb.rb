@@ -167,6 +167,6 @@ puts "===================="
 puts ""
 
 # Query the actor data and loop through the results to display the agent's list of represented actors output.
-Actor.order(:name).each do |actor|
+Agent.find_by(name: "Ari Emanuel").actors.where(name: "Christian Bale").each do |actor|
   puts actor.name
 end
