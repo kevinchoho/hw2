@@ -77,14 +77,55 @@
 
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
-# TODO!
+Role.destroy_all
+Actor.destroy_all
+Agent.destroy_all
+Movie.destroy_all
+Studio.destroy_all
 
 # Generate models and tables, according to the domain model.
-# TODO!
+# rails generate model Studio name:string
+# rails generate model Movie title:string year_released:integer rated:string studio:references
+# rails generate model Agent name:string
+# rails generate model Actor name:string agent:references
+# rails generate model Role movie:references actor:references character_name:string
+# rails db:migrate
+
 
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
-# TODO!
+# Studios
+warner = Studio.create!(name: "Warner Bros.")
+universal = Studio.create!(name: "Universal Pictures")
+
+# Movies
+matrix = Movie.create!(
+  title: "The Matrix",
+  year_released: 1999,
+  rated: "R",
+  studio: warner
+)
+
+inception = Movie.create!(
+  title: "Inception",
+  year_released: 2010,
+  rated: "PG-13",
+  studio: universal
+)
+
+# Agents
+caa = Agent.create!(name: "Creative Artists Agency")
+uta = Agent.create!(name: "United Talent Agency")
+
+# Actors
+keanu = Actor.create!(name: "Keanu Reeves", agent: caa)
+laurence = Actor.create!(name: "Laurence Fishburne", agent: caa)
+leo = Actor.create!(name: "Leonardo DiCaprio", agent: uta)
+
+# Roles
+Role.create!(movie: matrix, actor: keanu, character_name: "Neo")
+Role.create!(movie: matrix, actor: laurence, character_name: "Morpheus")
+Role.create!(movie: inception, actor: leo, character_name: "Cobb")
 
 # Prints a header for the movies output
 puts "Movies"
@@ -92,7 +133,10 @@ puts "======"
 puts ""
 
 # Query the movies data and loop through the results to display the movies output.
-# TODO!
+Movie.includes(:studio).order(:title).each do |movie|
+  puts "#{movie.title} (#{movie.year_released}) - #{movie.rated}"
+  puts "  Studio: #{movie.studio.name}"
+end
 
 # Prints a header for the cast output
 puts ""
@@ -101,7 +145,12 @@ puts "========"
 puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
-# TODO!
+Movie.includes(roles: :actor).each do |movie|
+  puts movie.title
+  movie.roles.each do |role|
+    puts "  #{role.actor.name} as #{role.character_name}"
+  end
+end
 
 # Prints a header for the agent's list of represented actors output
 puts ""
@@ -110,4 +159,9 @@ puts "===================="
 puts ""
 
 # Query the actor data and loop through the results to display the agent's list of represented actors output.
-# TODO!
+Agent.includes(:actors).each do |agent|
+  puts agent.name
+  agent.actors.each do |actor|
+    puts "  #{actor.name}"
+  end
+end

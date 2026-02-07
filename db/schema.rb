@@ -1,0 +1,58 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema[8.1].define(version: 2026_02_07_221416) do
+  create_table "actors", force: :cascade do |t|
+    t.integer "agent_id"
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_actors_on_agent_id"
+  end
+
+  create_table "agents", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "movies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "rated"
+    t.integer "studio_id"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "year_released"
+    t.index ["studio_id"], name: "index_movies_on_studio_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.integer "actor_id"
+    t.string "character_name"
+    t.datetime "created_at", null: false
+    t.integer "movie_id"
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_roles_on_actor_id"
+    t.index ["movie_id"], name: "index_roles_on_movie_id"
+  end
+
+  create_table "studios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "actors", "agents"
+  add_foreign_key "movies", "studios"
+  add_foreign_key "roles", "actors"
+  add_foreign_key "roles", "movies"
+end
