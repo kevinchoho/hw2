@@ -93,39 +93,47 @@ Studio.destroy_all
 
 
 # Insert data into the database that reflects the sample data shown above.
-# Do not use hard-coded foreign key IDs.
-# Studios
+
 warner = Studio.create!(name: "Warner Bros.")
-universal = Studio.create!(name: "Universal Pictures")
 
-# Movies
-matrix = Movie.create!(
-  title: "The Matrix",
-  year_released: 1999,
-  rated: "R",
-  studio: warner
-)
+batman_begins = Movie.create!(title: "Batman Begins", year_released: 2005, rated: "PG-13", studio: warner)
+dark_knight = Movie.create!(title: "The Dark Knight", year_released: 2008, rated: "PG-13", studio: warner)
+dark_knight_rises = Movie.create!(title: "The Dark Knight Rises", year_released: 2012, rated: "PG-13", studio: warner)
 
-inception = Movie.create!(
-  title: "Inception",
-  year_released: 2010,
-  rated: "PG-13",
-  studio: universal
-)
+ari = Agent.create!(name: "Ari Emanuel")
 
-# Agents
-caa = Agent.create!(name: "Creative Artists Agency")
-uta = Agent.create!(name: "United Talent Agency")
+christian = Actor.create!(name: "Christian Bale", agent: ari)
+michael = Actor.create!(name: "Michael Caine", agent: ari)
+liam = Actor.create!(name: "Liam Neeson", agent: ari)
+katie = Actor.create!(name: "Katie Holmes", agent: ari)
+gary = Actor.create!(name: "Gary Oldman", agent: ari)
+heath = Actor.create!(name: "Heath Ledger", agent: ari)
+aaron = Actor.create!(name: "Aaron Eckhart", agent: ari)
+maggie = Actor.create!(name: "Maggie Gyllenhaal", agent: ari)
+tom = Actor.create!(name: "Tom Hardy", agent: ari)
+joseph = Actor.create!(name: "Joseph Gordon-Levitt", agent: ari)
+anne = Actor.create!(name: "Anne Hathaway", agent: ari)
 
-# Actors
-keanu = Actor.create!(name: "Keanu Reeves", agent: caa)
-laurence = Actor.create!(name: "Laurence Fishburne", agent: caa)
-leo = Actor.create!(name: "Leonardo DiCaprio", agent: uta)
 
-# Roles
-Role.create!(movie: matrix, actor: keanu, character_name: "Neo")
-Role.create!(movie: matrix, actor: laurence, character_name: "Morpheus")
-Role.create!(movie: inception, actor: leo, character_name: "Cobb")
+Role.create!(movie: batman_begins, actor: christian, character_name: "Bruce Wayne")
+Role.create!(movie: batman_begins, actor: michael, character_name: "Alfred")
+Role.create!(movie: batman_begins, actor: liam, character_name: "Ra's Al Ghul")
+Role.create!(movie: batman_begins, actor: katie, character_name: "Rachel Dawes")
+Role.create!(movie: batman_begins, actor: gary, character_name: "Commissioner Gordon")
+
+
+Role.create!(movie: dark_knight, actor: christian, character_name: "Bruce Wayne")
+Role.create!(movie: dark_knight, actor: heath, character_name: "Joker")
+Role.create!(movie: dark_knight, actor: aaron, character_name: "Harvey Dent")
+Role.create!(movie: dark_knight, actor: michael, character_name: "Alfred")
+Role.create!(movie: dark_knight, actor: maggie, character_name: "Rachel Dawes")
+
+
+Role.create!(movie: dark_knight_rises, actor: christian, character_name: "Bruce Wayne")
+Role.create!(movie: dark_knight_rises, actor: gary, character_name: "Commissioner Gordon")
+Role.create!(movie: dark_knight_rises, actor: tom, character_name: "Bane")
+Role.create!(movie: dark_knight_rises, actor: joseph, character_name: "John Blake")
+Role.create!(movie: dark_knight_rises, actor: anne, character_name: "Selina Kyle")
 
 # Prints a header for the movies output
 puts "Movies"
@@ -145,8 +153,8 @@ puts "========"
 puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
-Movie.includes(roles: :actor).each do |movie|
-  puts movie.title
+Movie.includes(roles: :actor).order(:title).each do |movie|
+  puts "#{movie.title}"
   movie.roles.each do |role|
     puts "  #{role.actor.name} as #{role.character_name}"
   end
