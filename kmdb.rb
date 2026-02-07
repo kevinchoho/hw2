@@ -142,8 +142,8 @@ puts ""
 
 # Query the movies data and loop through the results to display the movies output.
 Movie.includes(:studio).order(:title).each do |movie|
-  puts "#{movie.title} (#{movie.year_released}) - #{movie.rated}"
-  puts "  Studio: #{movie.studio.name}"
+  # 使用 printf 对齐列
+  printf "%-22s %-13s %-6s %s\n", movie.title, movie.year_released, movie.rated, movie.studio.name
 end
 
 # Prints a header for the cast output
@@ -154,9 +154,9 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 Movie.includes(roles: :actor).order(:title).each do |movie|
-  puts "#{movie.title}"
-  movie.roles.each do |role|
-    puts "  #{role.actor.name} as #{role.character_name}"
+  # 角色按名字排序
+  movie.roles.sort_by { |r| r.actor.name }.each do |role|
+    printf "%-22s %-22s %s\n", movie.title, role.actor.name, role.character_name
   end
 end
 
@@ -167,9 +167,6 @@ puts "===================="
 puts ""
 
 # Query the actor data and loop through the results to display the agent's list of represented actors output.
-Agent.includes(:actors).order(:name).each do |agent|
-  puts agent.name
-  agent.actors.each do |actor|
-    puts "  #{actor.name}"
-  end
+Actor.order(:name).each do |actor|
+  puts actor.name
 end
