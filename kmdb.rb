@@ -167,7 +167,7 @@ puts "===================="
 puts ""
 
 # Query the actor data and loop through the results to display the agent's list of represented actors output.
-Agent.includes(:actors).each do |agent|
+Agent.includes(:actors).order(:name).each do |agent|
   puts agent.name
   agent.actors.each do |actor|
     puts "  #{actor.name}"
